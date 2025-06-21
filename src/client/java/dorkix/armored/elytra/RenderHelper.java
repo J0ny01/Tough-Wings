@@ -9,6 +9,7 @@ import net.minecraft.component.type.NbtComponent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.registry.tag.ItemTags;
 
 public class RenderHelper {
@@ -42,13 +43,7 @@ public class RenderHelper {
       return stack;
 
     // Convert the Nbt data to an ItemStack
-    var armorItem = ItemStack.fromNbt(player.getRegistryManager(),
-        chestplateData);
-
-    if (!armorItem.isPresent())
-      return stack;
-
-    return armorItem.get();
+    return ItemStack.CODEC.parse(NbtOps.INSTANCE, chestplateData).resultOrPartial().orElse(stack);
   }
 
   public static ItemStack modifyStackWithElytra(ItemStack stack) {
@@ -79,12 +74,6 @@ public class RenderHelper {
       return stack;
 
     // Convert the Nbt data to an ItemStack
-    var elytraItem = ItemStack.fromNbt(player.getRegistryManager(),
-        elytraData);
-
-    if (!elytraItem.isPresent())
-      return stack;
-
-    return elytraItem.get();
+    return ItemStack.CODEC.parse(NbtOps.INSTANCE, elytraData).resultOrPartial().orElse(stack);
   }
 }

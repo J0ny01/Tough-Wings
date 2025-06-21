@@ -14,11 +14,12 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.world.World;
 
 @Mixin(Entity.class)
-public abstract class EntityLavaHurtMixin  {
+public abstract class EntityLavaHurtMixin {
     @Inject(method = "setOnFireFromLava", at = @At("TAIL"))
     private void splitNetheriteInLava(CallbackInfo ci) {
         if ((Entity) (Object) this instanceof ItemEntity) {
@@ -48,8 +49,7 @@ public abstract class EntityLavaHurtMixin  {
                         return;
 
                     ItemStack chestplate =
-                            ItemStack.fromNbt(thisObject.getWorld().getRegistryManager(), armorData)
-                                    .orElse(ItemStack.EMPTY);
+                            ItemStack.CODEC.parse(NbtOps.INSTANCE, armorData).resultOrPartial().orElse(ItemStack.EMPTY);
                     ((ItemEntity) (Object) this).setStack(chestplate);
                 }
                 World world = thisObject.getWorld();

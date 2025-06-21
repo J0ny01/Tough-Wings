@@ -20,6 +20,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.screen.GrindstoneScreenHandler;
 import net.minecraft.screen.ScreenHandler;
@@ -101,7 +102,7 @@ public abstract class GrindStoneMixin extends ScreenHandler {
         // if found set the GrindStone result slot to contain the chestplate item
         this.context.run((world, blockpos) -> {
             this.result.setStack(slot,
-                    ItemStack.fromNbt(world.getRegistryManager(), armorData).orElse(ItemStack.EMPTY));
+                    ItemStack.CODEC.parse(NbtOps.INSTANCE, armorData).resultOrPartial().orElse(ItemStack.EMPTY));
         });
 
         sendContentUpdates();
@@ -167,13 +168,9 @@ public abstract class GrindStoneMixin extends ScreenHandler {
 
                 // replace the input armored elytra with the source elytra
                 var sourceElytra = ItemStack
-                        .fromNbt(world.getRegistryManager(),
-                                elytraData)
-                        .orElse(ItemStack.EMPTY);
+                        .CODEC.parse(NbtOps.INSTANCE, elytraData).resultOrPartial().orElse(ItemStack.EMPTY);;
                 var sourceArmor = ItemStack
-                        .fromNbt(world.getRegistryManager(),
-                                elytraData)
-                        .orElse(ItemStack.EMPTY);
+                        .CODEC.parse(NbtOps.INSTANCE, armorData).resultOrPartial().orElse(ItemStack.EMPTY);;
 
                 // check for compatible later added enchants
                 var currentEnchants = armoredElytra.getEnchantments().getEnchantments();
