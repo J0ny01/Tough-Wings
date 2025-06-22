@@ -15,6 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.registry.RegistryOps;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.world.World;
 
@@ -49,7 +50,7 @@ public abstract class EntityLavaHurtMixin {
                         return;
 
                     ItemStack chestplate =
-                            ItemStack.CODEC.parse(NbtOps.INSTANCE, armorData).resultOrPartial().orElse(ItemStack.EMPTY);
+                            ItemStack.CODEC.parse(RegistryOps.of(NbtOps.INSTANCE, thisObject.getWorld().getRegistryManager()), armorData).resultOrPartial().orElse(ItemStack.EMPTY);
                     ((ItemEntity) (Object) this).setStack(chestplate);
                 }
                 World world = thisObject.getWorld();

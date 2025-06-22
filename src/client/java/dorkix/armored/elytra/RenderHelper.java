@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.registry.RegistryOps;
 import net.minecraft.registry.tag.ItemTags;
 
 public class RenderHelper {
@@ -43,7 +44,7 @@ public class RenderHelper {
       return stack;
 
     // Convert the Nbt data to an ItemStack
-    return ItemStack.CODEC.parse(NbtOps.INSTANCE, chestplateData).resultOrPartial().orElse(stack);
+    return ItemStack.CODEC.parse(RegistryOps.of(NbtOps.INSTANCE, player.getRegistryManager()), chestplateData).resultOrPartial().orElse(stack);
   }
 
   public static ItemStack modifyStackWithElytra(ItemStack stack) {
@@ -74,6 +75,6 @@ public class RenderHelper {
       return stack;
 
     // Convert the Nbt data to an ItemStack
-    return ItemStack.CODEC.parse(NbtOps.INSTANCE, elytraData).resultOrPartial().orElse(stack);
+    return ItemStack.CODEC.parse(RegistryOps.of(NbtOps.INSTANCE, player.getRegistryManager()), elytraData).resultOrPartial().orElse(stack);
   }
 }

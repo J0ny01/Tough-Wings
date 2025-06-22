@@ -23,6 +23,7 @@ import net.minecraft.item.Items;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.registry.RegistryOps;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.ScreenTexts;
@@ -60,8 +61,10 @@ public class ArmoredElytra implements ModInitializer {
 		// elytra to restore the items later
 
 		context.run((world, blockPos) -> { 
-			customData.put(ArmoredElytra.ELYTRA_DATA.toString(), ItemStack.CODEC.encodeStart(NbtOps.INSTANCE, elytra).getOrThrow());
-			customData.put(ArmoredElytra.CHESTPLATE_DATA.toString(),  ItemStack.CODEC.encodeStart(NbtOps.INSTANCE, armor).getOrThrow());
+			customData.put(ArmoredElytra.ELYTRA_DATA.toString(), 
+					ItemStack.CODEC.encodeStart(RegistryOps.of(NbtOps.INSTANCE, world.getRegistryManager()), elytra).getOrThrow());
+			customData.put(ArmoredElytra.CHESTPLATE_DATA.toString(), 
+					ItemStack.CODEC.encodeStart(RegistryOps.of(NbtOps.INSTANCE, world.getRegistryManager()), armor).getOrThrow());
 		});
 
 		// Copy Attribute modifiers
