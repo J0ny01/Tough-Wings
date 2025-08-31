@@ -22,6 +22,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.tooltip.TooltipType;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.registry.RegistryOps;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.ScreenTexts;
@@ -58,11 +60,11 @@ public class ArmoredElytra implements ModInitializer {
 		// Convert ItemStack to Nbt and store it in the custom data component of the
 		// elytra to restore the items later
 
-		context.run((world, blockPos) -> {
-			customData.put(ArmoredElytra.ELYTRA_DATA.toString(),
-					elytra.toNbt(world.getRegistryManager()));
-			customData.put(ArmoredElytra.CHESTPLATE_DATA.toString(),
-					armor.toNbt(world.getRegistryManager()));
+		context.run((world, blockPos) -> { 
+			customData.put(ArmoredElytra.ELYTRA_DATA.toString(), 
+					ItemStack.CODEC.encodeStart(RegistryOps.of(NbtOps.INSTANCE, world.getRegistryManager()), elytra).getOrThrow());
+			customData.put(ArmoredElytra.CHESTPLATE_DATA.toString(), 
+					ItemStack.CODEC.encodeStart(RegistryOps.of(NbtOps.INSTANCE, world.getRegistryManager()), armor).getOrThrow());
 		});
 
 		// Copy Attribute modifiers

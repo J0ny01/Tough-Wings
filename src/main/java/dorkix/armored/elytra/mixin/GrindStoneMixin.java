@@ -20,6 +20,8 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.registry.RegistryOps;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.screen.GrindstoneScreenHandler;
 import net.minecraft.screen.ScreenHandler;
@@ -59,7 +61,6 @@ public abstract class GrindStoneMixin extends ScreenHandler {
         } else if (inputItem2.isOf(Items.ELYTRA)) {
             showSplitResult(inputItem2, 1);
         }
-
     }
 
     private void showSplitResult(ItemStack inputItem, int slot) {
@@ -101,7 +102,7 @@ public abstract class GrindStoneMixin extends ScreenHandler {
         // if found set the GrindStone result slot to contain the chestplate item
         this.context.run((world, blockpos) -> {
             this.result.setStack(slot,
-                    ItemStack.fromNbt(world.getRegistryManager(), armorData).orElse(ItemStack.EMPTY));
+                    ItemStack.CODEC.parse(RegistryOps.of(NbtOps.INSTANCE, world.getRegistryManager()), armorData).resultOrPartial().orElse(ItemStack.EMPTY));
         });
 
         sendContentUpdates();
@@ -166,14 +167,11 @@ public abstract class GrindStoneMixin extends ScreenHandler {
                         SoundCategory.BLOCKS);
 
                 // replace the input armored elytra with the source elytra
+                var registryNbtOps = RegistryOps.of(NbtOps.INSTANCE, world.getRegistryManager());
                 var sourceElytra = ItemStack
-                        .fromNbt(world.getRegistryManager(),
-                                elytraData)
-                        .orElse(ItemStack.EMPTY);
+                        .CODEC.parse(registryNbtOps, elytraData).resultOrPartial().orElse(ItemStack.EMPTY);;
                 var sourceArmor = ItemStack
-                        .fromNbt(world.getRegistryManager(),
-                                elytraData)
-                        .orElse(ItemStack.EMPTY);
+                        .CODEC.parse(registryNbtOps, armorData).resultOrPartial().orElse(ItemStack.EMPTY);;
 
                 // check for compatible later added enchants
                 var currentEnchants = armoredElytra.getEnchantments().getEnchantments();
