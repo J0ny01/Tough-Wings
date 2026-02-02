@@ -67,6 +67,11 @@ public class ArmoredElytra implements ModInitializer {
 					ItemStack.CODEC.encodeStart(RegistryOps.of(NbtOps.INSTANCE, world.getRegistryManager()), armor).getOrThrow());
 		});
 
+
+        // ChestPlate Durability
+        newElytra.set(DataComponentTypes.MAX_DAMAGE, armor.getMaxDamage());
+
+
 		// Copy Attribute modifiers
 		var armor_attr = armor.get(DataComponentTypes.ATTRIBUTE_MODIFIERS);
 		var builder = AttributeModifiersComponent.builder();
